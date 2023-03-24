@@ -1,0 +1,4 @@
+package cc.oolong.customer;
+
+public record CustomerRegistrationRequest(String name, String email, Integer age) {
+}
