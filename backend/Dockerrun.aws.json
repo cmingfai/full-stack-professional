@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "amigoscode-api",
-      "image": "mingfaicheung/spring-boot-example:latest",
+      "image": "cmingfai/full-stack-professional:latest",
       "essential": true,
       "memory": 512,
       "portMappings": [

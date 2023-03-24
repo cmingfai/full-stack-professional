@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>cc.oolong</groupId>
-	<artifactId>spring-boot-example</artifactId>
+	<artifactId>full-stack-professional</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-boot-example</name>
 	<description>Demo project for Spring Boot</description>
@@ -19,7 +19,7 @@
 	</organization>
 	<properties>
 		<java.version>19</java.version>
-		<docker.username>mingfaicheung</docker.username>
+		<docker.username>cmingfai</docker.username>
 	</properties>
 	<dependencies>
 		<dependency>
