@@ -13,13 +13,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-boot-example</name>
 	<description>Demo project for Spring Boot</description>
-	<organization>
-		<name>oolong.cc</name>
-		<url>https://www.oolong.cc</url>
-	</organization>
+
 	<properties>
 		<java.version>19</java.version>
 		<docker.username>cmingfai</docker.username>
+		<docker.image.name>full-stack-professional</docker.image.name>
+		<docker.image.tag/>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -193,7 +192,7 @@
 						</platforms>
 					</from>
 					<to>
-						<image>docker.io/${docker.username}/${project.artifactId}:${project.version}</image>
+						<image>docker.io/${docker.username}/${docker.image.name}:${docker.image.tag}</image>
 					    <tags>
 							<tag>latest</tag>
 						</tags>
