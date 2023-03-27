@@ -331,4 +331,5 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
             assertThat(c.getAge()).isEqualTo(age);
         });
     }
+
 }

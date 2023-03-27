@@ -59,14 +59,6 @@ public abstract class AbstractTestcontainers {
         return dataSource;
     }
 
-//    private static DataSource getDataSource() {
-//        return DataSourceBuilder.create()
-//                .url(postgreSQLContainer.getJdbcUrl())
-//                .username(postgreSQLContainer.getUsername())
-//                .password(postgreSQLContainer.getPassword())
-//                .build();
-//    }
-
     protected JdbcTemplate getJdbcTemplate() {
         return new JdbcTemplate(getDataSource());
     }
