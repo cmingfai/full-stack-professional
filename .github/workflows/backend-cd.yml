@@ -34,7 +34,7 @@ jobs:
       - name: Slack message - CD Workflow
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":workflow: Continuous Delivery Started"}' 
+          --data '{"text":":workflow: full-stack-professional CD Started: ${{env.GITHUB_SHA}}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Slack message - Setup Java
         run: >
@@ -54,6 +54,11 @@ jobs:
       - name: Set build number
         id: build-number
         run: echo "BUILD_NUMBER=$(TZ='Asia/Hong_Kong' date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT
+      - name: Slack message - Build Number
+        run: >
+          curl -X POST -H 'Content-type: application/json' 
+          --data '{"text":":tagspaces: Generated Build Number: ${{steps.build-number.outputs.BUILD_NUMBER}}"}' 
+          ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Slack message - Maven Build
         run: >
           curl -X POST -H 'Content-type: application/json' 
@@ -71,7 +76,7 @@ jobs:
       - name: Slack message - Docker
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":docker: Building and pushing docker image"}' 
+          --data '{"text":":docker: Building and pushing docker image cmingfai/full-stack-professional:${{steps.build-number.outputs.BUILD_NUMBER}}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Build and push docker image
         run: mvn -ntp -B -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
@@ -85,7 +90,7 @@ jobs:
       - name: Slack message - Deploy to AWS
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":aws: Deploying to AWS Beanstalk with version ${{steps.build-number.outputs.BUILD_NUMBER}}"}' 
+          --data '{"text":":aws: Deploying to AWS Beanstalk with version: ${{steps.build-number.outputs.BUILD_NUMBER}}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
@@ -113,5 +118,5 @@ jobs:
       - name: Slack message - Finished
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":finish_flag: Deploy workflow finished"}' 
+          --data '{"text":":finish_flag: Deploy Result: ${{job.status}}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
