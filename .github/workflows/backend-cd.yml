@@ -76,10 +76,15 @@ jobs:
       - name: Slack message - Docker
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":docker: Building and pushing docker image cmingfai/full-stack-professional:${{steps.build-number.outputs.BUILD_NUMBER}}"}' 
+          --data '{"text":":docker: Building and pushing docker image: cmingfai/full-stack-professional:${{steps.build-number.outputs.BUILD_NUMBER}}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Build and push docker image
         run: mvn -ntp -B -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
+      - name: Slack message - Dockerrun.aws.json
+        run: >
+          curl -X POST -H 'Content-type: application/json' 
+          --data '{"text":":update: Update Dockerrun.aws.json api image tag with new build number: ${{steps.build-number.outputs.BUILD_NUMBER}}"}' 
+          ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Update Dockerrun.aws.json api image tag with new build number
         run: |
           echo "Dockerrun.aws.json before updating tag"
