@@ -34,7 +34,7 @@ jobs:
       - name: Slack message - CD Workflow
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":workflow: full-stack-professional CD Started: ${{env.GITHUB_SHA}}"}' 
+          --data '{"text":":workflow: Continuous Delivery started: full-stack-professional"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Slack message - Setup Java
         run: >
