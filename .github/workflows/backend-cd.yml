@@ -57,14 +57,14 @@ jobs:
       - name: Slack message - Maven Build
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":builder: Building and pushing docker image"}' 
+          --data '{"text":":apache_maven: Build and package jar file"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Build Package with Maven
         run: mvn -ntp -B package
       - name: Slack message - Unit and Integration Tests
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":testy: Building and pushing docker image"}' 
+          --data '{"text":":test: Running Unit and Integration Tests"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Unit and Integration Tests with Maven
         run: mvn -ntp -B verify
