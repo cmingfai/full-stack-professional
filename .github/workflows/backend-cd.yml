@@ -30,12 +30,12 @@ jobs:
         working-directory: ./backend
 
     steps:
+      - uses: actions/checkout@v3
       - name: Slack message - CD Workflow
         run: >
           curl -X POST -H 'Content-type: application/json' 
           --data '{"text":":workflow: Continuous Delivery started: full-stack-professional"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
-      - uses: actions/checkout@v3
       - name: Slack message - Setup Java
         run: >
           curl -X POST -H 'Content-type: application/json' 
