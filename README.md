@@ -1,4 +1,4 @@
-# Demo full stack project to be built when learning in the Full Stack Professional course attended at amigoscode.com
+# Demo full stack project to be built when learning in the PROFESSIONAL Full Stack Developer course attended at amigoscode.com
 
 The project to be built will have the following parts:
 - A Rest API using Spring Boot and PostgreSQL Database
