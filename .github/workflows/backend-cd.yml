@@ -129,5 +129,5 @@ jobs:
         if: always()
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":finish_flag: Deploy Result: ${{job.status}}"}' 
+          --data '{"text":":finish_flag: URL: ${{secrets.EB_ENVIRONMENT_URL}}, Deploy Result: ${{job.status}}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
