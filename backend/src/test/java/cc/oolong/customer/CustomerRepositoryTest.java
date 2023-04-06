@@ -36,7 +36,8 @@ class CustomerRepositoryTest extends AbstractTestcontainers {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28);
+                28,
+                Gender.MALE);
         underTest.save(customer);
 
         // when
@@ -52,7 +53,8 @@ class CustomerRepositoryTest extends AbstractTestcontainers {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28);
+                28,
+                Gender.MALE);
 
         // when
         var actual=underTest.existsCustomerByEmail(email);
@@ -67,7 +69,8 @@ class CustomerRepositoryTest extends AbstractTestcontainers {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28);
+                28,
+                Gender.MALE);
         underTest.save(customer);
 
         int id=underTest.findAll().stream().filter(c->c.getEmail().equals(email))

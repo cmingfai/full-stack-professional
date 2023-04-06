@@ -33,7 +33,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         // given
          Customer customer=new Customer(FAKER.name().fullName(),
                  FAKER.internet().safeEmailAddress()+"-"+ UUID.randomUUID(),
-                 28);
+                 28, Gender.MALE);
          underTest.insertCustomer(customer);
 
         // when
@@ -50,7 +50,8 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28);
+                28,
+                Gender.MALE);
         underTest.insertCustomer(customer);
 
         int id=underTest.selectAllCustomers().stream().filter(c->c.getEmail().equals(email))
@@ -65,6 +66,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
             assertThat(c.getName()).isEqualTo(customer.getName());
             assertThat(c.getEmail()).isEqualTo(customer.getEmail());
             assertThat(c.getAge()).isEqualTo(customer.getAge());
+            assertThat(c.getGender()).isEqualTo(customer.getGender());
         });
     }
 
@@ -92,7 +94,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         for (int i=0; i<numOfCustomersToAdd; i++) {
             Customer customer = new Customer(FAKER.name().fullName(),
                     FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID(),
-                    28);
+                    28,Gender.MALE);
             underTest.insertCustomer(customer);
         }
         // when
@@ -109,7 +111,8 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28);
+                28,
+                Gender.MALE);
         underTest.insertCustomer(customer);
 
         // when
@@ -138,7 +141,8 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28);
+                28,
+                Gender.MALE);
         underTest.insertCustomer(customer);
 
         // when
@@ -169,7 +173,8 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28);
+                28,
+                Gender.MALE);
         underTest.insertCustomer(customer);
 
         int id=underTest.selectAllCustomers().stream().filter(c->c.getEmail().equals(email))
@@ -189,7 +194,8 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String oldName=FAKER.name().fullName();
         Customer customer=new Customer(oldName,
                 email,
-                28);
+                28,
+                Gender.MALE);
         underTest.insertCustomer(customer);
 
         // when
@@ -220,7 +226,8 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String name=FAKER.name().fullName();
         Customer customer=new Customer(name,
                 oldEmail,
-                28);
+                28,
+                Gender.MALE);
        underTest.insertCustomer(customer);
 
         // when
@@ -248,8 +255,9 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         String name=FAKER.name().fullName();
         int oldAge=28;
+        Gender gender=Gender.MALE;
         Customer customer=new Customer(name,
-                email, oldAge);
+                email, oldAge, gender);
         underTest.insertCustomer(customer);
 
         // when
@@ -271,12 +279,42 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
     }
 
     @Test
+    void updateCustomerGender(){
+        // given
+        String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
+        String name=FAKER.name().fullName();
+        int age=28;
+        Gender oldGender=Gender.MALE;
+        Customer customer=new Customer(name,
+                email, age, oldGender);
+        underTest.insertCustomer(customer);
+
+        // when
+        int id=underTest.selectAllCustomers().stream().filter(c->c.getEmail().equals(email))
+                .map(Customer::getId).findFirst().orElseThrow();
+
+        customer.setId(id);
+        Gender newGender=Gender.FEMALE;
+        customer.setGender(newGender);
+        underTest.updateCustomer(customer);
+
+        // then
+        Optional<Customer> updated=underTest.selectCustomerById(id);
+
+        assertThat(updated).isPresent().hasValueSatisfying(c->{
+            assertThat(c.getGender()).isEqualTo(newGender);
+            assertThat(c.getGender()).isNotEqualTo(oldGender);
+        });
+    }
+
+    @Test
     void willUpdateAllPropertiesCustomer(){
         // given
         String oldEmail = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         String oldName=FAKER.name().fullName();
         int oldAge=28;
-        Customer customer=new Customer(oldName, oldEmail, oldAge);
+        Gender oldGender=Gender.MALE;
+        Customer customer=new Customer(oldName, oldEmail, oldAge, oldGender);
         underTest.insertCustomer(customer);
 
         // when
@@ -287,9 +325,11 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String newEmail = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         String newName=FAKER.name().fullName();
         int newAge=38;
+        Gender newGender=Gender.FEMALE;
         customer.setEmail(newEmail);
         customer.setName(newName);
         customer.setAge(newAge);
+        customer.setGender(newGender);
         underTest.updateCustomer(customer);
 
         // then
@@ -302,6 +342,8 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
             assertThat(c.getName()).isNotEqualTo(oldEmail);
             assertThat(c.getAge()).isEqualTo(newAge);
             assertThat(c.getAge()).isNotEqualTo(oldAge);
+            assertThat(c.getGender()).isEqualTo(newGender);
+            assertThat(c.getGender()).isNotEqualTo(oldGender);
         });
 
     }
@@ -312,7 +354,8 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         String name=FAKER.name().fullName();
         int age=28;
-        Customer customer=new Customer(name, email, age);
+        Gender gender=Gender.MALE;
+        Customer customer=new Customer(name, email, age, gender);
         underTest.insertCustomer(customer);
 
         // when
@@ -329,6 +372,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
             assertThat(c.getName()).isEqualTo(name);
             assertThat(c.getEmail()).isEqualTo(email);
             assertThat(c.getAge()).isEqualTo(age);
+            assertThat(c.getGender()).isEqualTo(gender);
         });
     }
 

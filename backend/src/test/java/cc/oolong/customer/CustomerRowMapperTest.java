@@ -28,12 +28,14 @@ class CustomerRowMapperTest {
     void mapRow() throws Exception {
 
         // given
-        Customer expected=new Customer(1,"Alex","alex@gmail.com",22);
+        Customer expected=new Customer(1,"Alex","alex@gmail.com",22,
+                Gender.MALE);
 
         when(resultSet.getInt("id")).thenReturn(expected.getId());
         when(resultSet.getString("name")).thenReturn(expected.getName());
         when(resultSet.getString("email")).thenReturn(expected.getEmail());
         when(resultSet.getInt("age")).thenReturn(expected.getAge());
+        when(resultSet.getString("gender")).thenReturn(expected.getGender().name());
 
         // when
         Customer actual=underTest.mapRow(resultSet,1);

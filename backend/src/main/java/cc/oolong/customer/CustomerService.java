@@ -37,7 +37,7 @@ public class CustomerService {
            throw new DuplicateResourceException("email already taken");
         }
         // add
-        Customer customer = new Customer(customerRegistrationRequest.name(), customerRegistrationRequest.email(), customerRegistrationRequest.age());
+        Customer customer = new Customer(customerRegistrationRequest.name(), customerRegistrationRequest.email(), customerRegistrationRequest.age(), customerRegistrationRequest.gender());
         customerDao.insertCustomer(customer);
 
     }
@@ -59,11 +59,13 @@ public class CustomerService {
         String name=request.name();
         String email=request.email();
         Integer age=request.age();
+        Gender gender=request.gender();
 
         boolean isNameChanged=name!=null && !name.equals(customer.getName());
         boolean isEmailChanged=email!=null && !email.equals(customer.getEmail());
         boolean isAgeChanged=age!=null && !age.equals(customer.getAge());
-        boolean isDataChangesFound=isNameChanged || isEmailChanged || isAgeChanged;
+        boolean isGenderChanged=gender!=null && !gender.equals(customer.getGender());
+        boolean isDataChangesFound=isNameChanged || isEmailChanged || isAgeChanged || isGenderChanged;
 
         if (!isDataChangesFound) {
             throw new RequestValidationException("No data changes found.");
@@ -82,6 +84,10 @@ public class CustomerService {
 
         if (isAgeChanged)  {
             customer.setAge(age);
+        }
+
+        if (isGenderChanged)  {
+            customer.setGender(gender);
         }
 
         customerDao.updateCustomer(customer);

@@ -2,6 +2,7 @@ package cc.oolong;
 
 import cc.oolong.customer.Customer;
 import cc.oolong.customer.CustomerRepository;
+import cc.oolong.customer.Gender;
 import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -29,8 +30,8 @@ public class Main {
     @Bean
     CommandLineRunner runner(CustomerRepository customerRepository) {
         return args-> {
-
-            Faker faker = new Faker();
+            Random rand = new Random();
+             Faker faker = new Faker();
 
             for (int i=0; i<100; i++) {
                 String firstName = faker.name().firstName(); // Emory
@@ -40,7 +41,9 @@ public class Main {
                 String email = "%s.%s@gmail.com".formatted(firstName, lastName).toLowerCase();
                 Random random = new Random();
                 Integer age = random.nextInt(19, 55);
-                Customer c = new Customer(fullName, email, age);
+
+                Gender gender=rand.nextInt() % 2==0? Gender.MALE:Gender.FEMALE;
+                Customer c = new Customer(fullName, email, age, gender);
 
                 customerRepository.save(c);
             }

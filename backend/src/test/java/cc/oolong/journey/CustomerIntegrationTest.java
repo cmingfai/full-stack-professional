@@ -3,6 +3,7 @@ package cc.oolong.journey;
 import cc.oolong.customer.Customer;
 import cc.oolong.customer.CustomerRegistrationRequest;
 import cc.oolong.customer.CustomerUpdateRequest;
+import cc.oolong.customer.Gender;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
 import org.junit.jupiter.api.Test;
@@ -35,8 +36,9 @@ public class CustomerIntegrationTest {
         String name=fakerName.fullName();
         String email=fakerName.lastName()+ "-"+UUID.randomUUID()+"@amigoscode.com";
         int age=RANDOM.nextInt(1,100);
+        Gender gender= Gender.MALE;
         // create a registration request
-        CustomerRegistrationRequest request =new CustomerRegistrationRequest(name,email,age);
+        CustomerRegistrationRequest request =new CustomerRegistrationRequest(name,email,age,gender);
         // send a post request
         webTestClient.post()
                 .uri(CUSTOMERS_URI)
@@ -64,7 +66,7 @@ public class CustomerIntegrationTest {
 
 
         // make sure that customer is present
-        Customer expectedCustomer = new Customer(name,email,age);
+        Customer expectedCustomer = new Customer(name,email,age, gender);
         assertThat(allCustomers).usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
                 .contains(expectedCustomer);
 
@@ -92,8 +94,9 @@ public class CustomerIntegrationTest {
         String name=fakerName.fullName();
         String email=fakerName.lastName()+ "-"+UUID.randomUUID()+"@amigoscode.com";
         int age=RANDOM.nextInt(1,100);
+        Gender gender=Gender.MALE;
         // create a registration request
-        CustomerRegistrationRequest request =new CustomerRegistrationRequest(name,email,age);
+        CustomerRegistrationRequest request =new CustomerRegistrationRequest(name,email,age,gender);
         // send a post request
         webTestClient.post()
                 .uri(CUSTOMERS_URI)
@@ -147,8 +150,9 @@ public class CustomerIntegrationTest {
         String name=fakerName.fullName();
         String email=fakerName.lastName()+ "-"+UUID.randomUUID()+"@amigoscode.com";
         int age=RANDOM.nextInt(1,100);
+        Gender gender=Gender.MALE;
         // create a registration request
-        CustomerRegistrationRequest registrationRequest =new CustomerRegistrationRequest(name,email,age);
+        CustomerRegistrationRequest registrationRequest =new CustomerRegistrationRequest(name,email,age, gender);
         // send a post request
         webTestClient.post()
                 .uri(CUSTOMERS_URI)
@@ -182,8 +186,8 @@ public class CustomerIntegrationTest {
         String newName=fakerName.fullName();
         String newEmail=fakerName.lastName()+ "-"+UUID.randomUUID()+"@amigoscode.com";
         int newAge=age+RANDOM.nextInt(1,100);
-
-        CustomerUpdateRequest updateRequest=new CustomerUpdateRequest(newName,newEmail,newAge);
+         Gender newGender=Gender.FEMALE;
+        CustomerUpdateRequest updateRequest=new CustomerUpdateRequest(newName,newEmail,newAge, newGender);
         webTestClient.put()
                 .uri(CUSTOMERS_URI+"/{id}",id)
                 .accept(MediaType.APPLICATION_JSON)
@@ -196,7 +200,7 @@ public class CustomerIntegrationTest {
         // get customer by ID
 
         // make sure that customer is present
-        Customer expectedCustomer = new Customer(id,newName,newEmail,newAge);
+        Customer expectedCustomer = new Customer(id,newName,newEmail,newAge, newGender);
 
 
         webTestClient.get()

@@ -16,10 +16,18 @@ public class CustomerListDataAccessService implements CustomerDao {
     static {
         customers=new ArrayList<>();
 
-        Customer alex=new Customer(1,"Alex","alex@gmail.com",22);
+        Customer alex=new Customer(1,
+                "Alex",
+                "alex@gmail.com",
+                22,
+                Gender.MALE);
         customers.add(alex);
 
-        Customer jamila=new Customer(2,"Jamila","jamila@gmail.com",19);
+        Customer jamila=new Customer(2,
+                "Jamila",
+                "jamila@gmail.com",
+                19,
+                Gender.FEMALE);
         customers.add(jamila);
     }
 
@@ -61,6 +69,7 @@ public class CustomerListDataAccessService implements CustomerDao {
             c.setName(customer.getName());
             c.setEmail(customer.getEmail());
             c.setAge(customer.getAge());
+            c.setGender(customer.getGender());
         });
     }
 }
