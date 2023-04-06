@@ -34,12 +34,12 @@ jobs:
       - name: Slack commit message and sha
         run: >
           curl -X POST -H 'Content-type: application/json'
-          --data '{"text":":github: https://github.com/cmingfai/full-stack-professional/commit/${{ github.sha }} - ${{ github.event.head_commit.message }}"}' 
+          --data '{"text":":github: Created commit: https://github.com/cmingfai/full-stack-professional/commit/${{ github.sha }} - ${{ github.event.head_commit.message }}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Slack message - CD Workflow
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":workflow: Starting Continuous Delivery: full-stack-professional"}' 
+          --data '{"text":":workflow: Starting Continuous Delivery"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Slack message - Setup Java
         run: >
@@ -129,5 +129,5 @@ jobs:
         if: always()
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":finish_flag: URL: ${{secrets.EB_ENVIRONMENT_URL}}, Deploy Result: ${{job.status}}"}' 
+          --data '{"text":":finish_flag: Deploy Result: ${{job.status}}, URL: ${{secrets.EB_ENVIRONMENT_URL}}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}

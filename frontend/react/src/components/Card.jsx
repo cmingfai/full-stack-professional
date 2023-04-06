@@ -11,7 +11,14 @@ import {
     useColorModeValue,
 } from '@chakra-ui/react';
 
-export default function CardWithImage({id, name, email, age}) {
+const getRandomInt = max=> {
+    return Math.floor(Math.random() * max);
+}
+
+export default function CardWithImage({id, name, email, age, gender}) {
+    const sex=gender==="MALE"?"men":"women";
+    const randomInt=getRandomInt(100);
+
     return (
         <Center py={6}>
             <Box
@@ -32,9 +39,7 @@ export default function CardWithImage({id, name, email, age}) {
                 <Flex justify={'center'} mt={-12}>
                     <Avatar
                         size={'xl'}
-                        src={
-                            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ'
-                        }
+                        src={`https://randomuser.me/api/portraits/${sex}/${randomInt}.jpg`}
                         alt={'Author'}
                         css={{
                             border: '2px solid white',
@@ -49,7 +54,7 @@ export default function CardWithImage({id, name, email, age}) {
                             {name}
                         </Heading>
                         <Text color={'gray.500'}>{email}</Text>
-                        <Text color={'gray.500'}>Age {age}</Text>
+                        <Text color={'gray.500'}>Age {age} | {gender}</Text>
                     </Stack>
                 </Box>
             </Box>

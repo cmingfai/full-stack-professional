@@ -47,8 +47,8 @@ const App=()=>{
 
             {customers.map((customer,index)=>{
                 return (
-                <WrapItem>
-                    <CardWithImage key={index} {...customer}></CardWithImage>
+                <WrapItem key={index}>
+                    <CardWithImage {...customer}></CardWithImage>
                 </WrapItem>
                 )
             })}
