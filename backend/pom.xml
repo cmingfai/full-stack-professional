@@ -17,7 +17,7 @@
 	<properties>
 		<java.version>19</java.version>
 		<docker.username>cmingfai</docker.username>
-		<docker.image.name>full-stack-professional</docker.image.name>
+		<docker.image.name>amigoscode-api</docker.image.name>
 		<docker.image.tag/>
 	</properties>
 	<dependencies>

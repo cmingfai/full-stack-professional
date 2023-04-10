@@ -9,20 +9,27 @@ import {
     Stack,
     Tag,
     useColorModeValue,
+    Button,
 } from '@chakra-ui/react';
+
+import {successNotification, errorNotification} from "../services/notification"
+import {DeleteCustomerButton} from "./DeleteCustomerButton"
+import EditCustomerDrawer from "./EditCustomerDrawer"
 
 const getRandomInt = max=> {
     return Math.floor(Math.random() * max);
 }
 
-export default function CardWithImage({id, name, email, age, gender}) {
+export default function CardWithImage({id, name, email, age, gender, imageNumber, fetchCustomers}) {
     const sex=gender==="MALE"?"men":"women";
-    const randomInt=getRandomInt(100);
+    // const randomInt=getRandomInt(99);
+    const randomInt=imageNumber;
 
     return (
         <Center py={6}>
             <Box
-                maxW={'300px'}
+                maxW={'250px'}
+                minW={'250px'}
                 w={'full'}
                 bg={useColorModeValue('white', 'gray.800')}
                 boxShadow={'2xl'}
@@ -55,9 +62,24 @@ export default function CardWithImage({id, name, email, age, gender}) {
                         </Heading>
                         <Text color={'gray.500'}>{email}</Text>
                         <Text color={'gray.500'}>Age {age} | {gender}</Text>
-                    </Stack>
+                       </Stack>
                 </Box>
+
+                <Stack p={2} direction={"row"}>
+                    <Stack w={"full"}>
+
+                    <EditCustomerDrawer id={id} initialValues={{name, email, age, gender}} fetchCustomers={fetchCustomers}></EditCustomerDrawer>
+                    </Stack>
+                    <Stack w={"full"}>
+
+                    <DeleteCustomerButton fetchCustomers={fetchCustomers} customerId={id}></DeleteCustomerButton>
+                    </Stack>
+                </Stack>
+
             </Box>
+
+
+
         </Center>
     );
 }

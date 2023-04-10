@@ -1,21 +1,31 @@
 import {Wrap,WrapItem, Spinner, Text} from "@chakra-ui/react"
 import SidebarWithHeader from "./components/shared/SideBar"
 import CardWithImage from "./components/Card";
+import CreateCustomerDrawer from "./components/CreateCustomerDrawer";
 import {useEffect, useState} from "react";
 import {getCustomers} from "./services/client.js"
+
 
 const App=()=>{
     const [customers, setCustomers]=useState([])
     const [loading, setLoading]=useState(false)
+    const [error, setError]=useState("")
 
-    useEffect(()=>{
+    const fetchCustomers=() => {
         setLoading(true)
         getCustomers()
             .then(res=>{
                 setCustomers(res.data)
             })
-            .catch(err=>console.log(err))
+            .catch(err=> {
+                console.log(err)
+                setError(err?.response.data.message)
+                errorNotification(err.code,err?.response.data.message);
+            })
             .finally(()=>setLoading(false))
+    }
+    useEffect(()=>{
+       fetchCustomers();
     },[])
 
     if (loading) {
@@ -32,23 +42,35 @@ const App=()=>{
         )
     }
 
+    if (error) {
+        return (
+            <SidebarWithHeader>
+                <CreateCustomerDrawer fetchCustomers={fetchCustomers}/>
+                <Text mt={2}>Oops, there is an error.</Text>
+            </SidebarWithHeader>
+        )
+    }
+
     if (customers.length<=0) {
         return (
             <SidebarWithHeader>
-                <Text>No customers available</Text>
+                <CreateCustomerDrawer fetchCustomers={fetchCustomers}/>
+                <Text mt={2}>No customers available</Text>
             </SidebarWithHeader>
         )
     }
 
 
     return (
-        <SidebarWithHeader>
-            <Wrap justify={"center"} spacing={"30px"}>
+         <SidebarWithHeader>
+             <CreateCustomerDrawer fetchCustomers={fetchCustomers}/>
+
+             <Wrap justify={"center"} spacing={"30px"}>
 
             {customers.map((customer,index)=>{
                 return (
                 <WrapItem key={index}>
-                    <CardWithImage {...customer}></CardWithImage>
+                    <CardWithImage {...customer} imageNumber={index} fetchCustomers={fetchCustomers}></CardWithImage>
                 </WrapItem>
                 )
             })}
