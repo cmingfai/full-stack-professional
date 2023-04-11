@@ -1,5 +1,5 @@
-FROM node:19-alpine
-ARG api_base_url=http://localhost:8088
+FROM node:lts-alpine
+ARG api_base_url
 WORKDIR /app
 COPY package*.json .
 RUN npm i --silent

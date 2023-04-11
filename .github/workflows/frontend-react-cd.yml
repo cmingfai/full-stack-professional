@@ -1,4 +1,4 @@
-name: CD - Deploy Backend
+name: CD - Deploy React Frontend
 
 on:
   workflow_dispatch:
@@ -6,28 +6,14 @@ on:
     branches:
       - main
     paths:
-      - backend/**
+      - frontend/react/**
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:15.2
-        env:
-          POSTGRES_USER: amigoscode
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: customer
-        ports:
-          - 5432:5432
-        options:
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./frontend/react
 
     steps:
       - uses: actions/checkout@v3
@@ -39,23 +25,15 @@ jobs:
       - name: Slack message - CD Workflow
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":workflow: Starting Continuous Delivery"}' 
+          --data '{"text":":workflow: Starting CD for React Frontend"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
-      - name: Slack message - Setup Java
-        run: >
-          curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":java: Setting up Java 19"}' 
-          ${{ secrets.SLACK_WEBHOOK_URL }}
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '19'
-          cache: 'maven'
-      - name: Login to Docker Hub
+          - name: Login to Docker Hub
+
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+
       - name: Set build number
         id: build-number
         run: echo "BUILD_NUMBER=$(TZ='Asia/Hong_Kong' date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT
@@ -64,27 +42,22 @@ jobs:
           curl -X POST -H 'Content-type: application/json' 
           --data '{"text":":tagspaces: Generated Build Number: ${{steps.build-number.outputs.BUILD_NUMBER}}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
-      - name: Slack message - Maven Build
-        run: >
-          curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":apache_maven: Build and package jar file"}' 
-          ${{ secrets.SLACK_WEBHOOK_URL }}
-      - name: Build Package with Maven
-        run: mvn -ntp -B package
-      - name: Slack message - Unit and Integration Tests
-        run: >
-          curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":test: Running Unit and Integration Tests"}' 
-          ${{ secrets.SLACK_WEBHOOK_URL }}
-      - name: Unit and Integration Tests with Maven
-        run: mvn -ntp -B verify
+
       - name: Slack message - Docker
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":docker: Building and pushing docker image: cmingfai/amigoscode-api:${{steps.build-number.outputs.BUILD_NUMBER}}"}' 
+          --data '{"text":":docker: Building and pushing docker image: cmingfai/amigoscode-react:${{steps.build-number.outputs.BUILD_NUMBER}}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
-      - name: Build and push docker image
-        run: mvn -ntp -B -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
+
+      - name: Build and push React Frontend Docker image
+        run: |
+          chmod +x ../../.ci/build-publish.sh
+          USERNAME=cmingfai \
+          REPO=amigoscode-react \
+          TAG=${{ steps.build-number.outputs.BUILD_NUMBER }} \
+          ../../.ci/build-publish.sh . \
+          --build-arg api_base_url=http://amigoscodeapi-env.eba-fbgqpqvc.ap-east-1.elasticbeanstalk.com:8080
+
       - name: Slack message - Dockerrun.aws.json
         run: >
           curl -X POST -H 'Content-type: application/json' 
@@ -93,10 +66,10 @@ jobs:
       - name: Update Dockerrun.aws.json api image tag with new build number
         run: |
           echo "Dockerrun.aws.json before updating tag"
-          cat ../Dockerrun.aws.json
-          sed -i -E 's_(cmingfai/amigoscode-api:)([^"]*)_\1'${{steps.build-number.outputs.BUILD_NUMBER}}'_' ../Dockerrun.aws.json
+          cat ../../Dockerrun.aws.json
+          sed -i -E 's_(cmingfai/amigoscode-react:)([^"]*)_\1'${{steps.build-number.outputs.BUILD_NUMBER}}'_' ../../Dockerrun.aws.json
           echo "Dockerrun.aws.json after updating tag"
-          cat ../Dockerrun.aws.json
+          cat ../../Dockerrun.aws.json
       - name: Slack message - Deploy to AWS
         run: >
           curl -X POST -H 'Content-type: application/json' 
@@ -122,8 +95,8 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add ../Dockerrun.aws.json
-          git commit -m "Update Dockerrun.aws.json docker image with new tag ${{ steps.build-number.outputs.BUILD_NUMBER }}"
+          git add ../../Dockerrun.aws.json
+          git commit -m "Update Dockerrun.aws.json for React frontend docker image with new version ${{ steps.build-number.outputs.BUILD_NUMBER }}"
           git push
       - name: Slack message - Finished
         if: always()
