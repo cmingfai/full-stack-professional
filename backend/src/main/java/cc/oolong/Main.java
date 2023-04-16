@@ -7,16 +7,13 @@ import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Random;
+import java.util.UUID;
 
 @SpringBootApplication
 public class Main {
@@ -26,12 +23,39 @@ public class Main {
         ConfigurableApplicationContext ctx = SpringApplication.run(Main.class, args);
 //        printBeans(ctx);
     }
+//
+//    @Bean
+//    CommandLineRunner runner(CustomerRepository customerRepository) {
+//        return args-> {
+//            Random rand = new Random();
+//             Faker faker = new Faker();
+//            String firstName = faker.name().firstName(); // Emory
+//            String lastName = faker.name().lastName(); // Barton
+//
+//            String fullName = "%s %s".formatted(firstName, lastName);
+//            String email = "%s.%s@gmail.com".formatted(firstName, lastName).toLowerCase();
+//            Random random = new Random();
+//            Integer age = random.nextInt(19, 55);
+//
+//            Gender gender=rand.nextInt() % 2==0? Gender.MALE:Gender.FEMALE;
+//            Customer c = new Customer(fullName, email, UUID.randomUUID().toString(), age, gender);
+//
+//            customerRepository.save(c);
+//
+//
+//        };
+//    }
 
     @Bean
-    CommandLineRunner runner(CustomerRepository customerRepository) {
+    @ConditionalOnProperty(
+            prefix = "command.line.runner",
+            value = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
+    CommandLineRunner runner(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
         return args-> {
             Random rand = new Random();
-             Faker faker = new Faker();
+            Faker faker = new Faker();
             String firstName = faker.name().firstName(); // Emory
             String lastName = faker.name().lastName(); // Barton
 
@@ -41,7 +65,7 @@ public class Main {
             Integer age = random.nextInt(19, 55);
 
             Gender gender=rand.nextInt() % 2==0? Gender.MALE:Gender.FEMALE;
-            Customer c = new Customer(fullName, email, age, gender);
+            Customer c = new Customer(fullName, email, passwordEncoder.encode(UUID.randomUUID().toString()), age, gender);
 
             customerRepository.save(c);
 

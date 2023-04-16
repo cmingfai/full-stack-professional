@@ -1,13 +1,10 @@
 package cc.oolong.customer;
 
-import com.github.javafaker.Faker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.UUID;
 
 import static org.mockito.Mockito.verify;
 
@@ -56,7 +53,7 @@ class CustomerJPADataAccessServiceTest {
         // given
         Customer customer=new Customer(1,"foo bar",
                 "foo@gmail.com",
-                28,
+                "password", 28,
                 Gender.MALE);
 
         // when
@@ -108,7 +105,7 @@ class CustomerJPADataAccessServiceTest {
         // given
         Customer customer=new Customer(1,"foo bar",
                 "foo@gmail.com",
-                28,
+                "password", 28,
                 Gender.MALE);
 
         // when

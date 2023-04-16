@@ -5,9 +5,6 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 @Repository("list")
 public class CustomerListDataAccessService implements CustomerDao {
@@ -19,6 +16,7 @@ public class CustomerListDataAccessService implements CustomerDao {
         Customer alex=new Customer(1,
                 "Alex",
                 "alex@gmail.com",
+                "password",
                 22,
                 Gender.MALE);
         customers.add(alex);
@@ -26,6 +24,7 @@ public class CustomerListDataAccessService implements CustomerDao {
         Customer jamila=new Customer(2,
                 "Jamila",
                 "jamila@gmail.com",
+                "password",
                 19,
                 Gender.FEMALE);
         customers.add(jamila);
@@ -68,8 +67,15 @@ public class CustomerListDataAccessService implements CustomerDao {
         customers.stream().filter(c->c.getId().equals(customer.getId())).findFirst().ifPresent(c-> {
             c.setName(customer.getName());
             c.setEmail(customer.getEmail());
+            c.setPassword(customer.getPassword());
             c.setAge(customer.getAge());
             c.setGender(customer.getGender());
         });
+    }
+
+    @Override
+    public Optional<Customer> selectUserByEmail(String email) {
+        return customers.stream().filter(c->c.getUsername().equals(email))
+                .findFirst();
     }
 }

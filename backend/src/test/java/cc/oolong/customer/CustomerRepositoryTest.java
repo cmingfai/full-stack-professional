@@ -1,33 +1,34 @@
 package cc.oolong.customer;
 
 import cc.oolong.AbstractTestcontainers;
+import cc.oolong.TestConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Import;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
+@DataJpaTest(properties = {"command.line.runner.enabled=false"})
 @AutoConfigureTestDatabase(replace=AutoConfigureTestDatabase.Replace.NONE)
+//@Import({TestConfig.class})
 class CustomerRepositoryTest extends AbstractTestcontainers {
 
     @Autowired
     private CustomerRepository underTest;
 
-    @Autowired
-    private ApplicationContext applicationContext;
+//    @Autowired
+//    private ApplicationContext applicationContext;
 
     @BeforeEach
     void setUp() {
         underTest.deleteAll();
-        System.out.println(applicationContext.getBeanDefinitionCount());
+//        System.out.println(applicationContext.getBeanDefinitionCount());
     }
 
     @Test
@@ -36,7 +37,7 @@ class CustomerRepositoryTest extends AbstractTestcontainers {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28,
+                "password", 28,
                 Gender.MALE);
         underTest.save(customer);
 
@@ -53,7 +54,7 @@ class CustomerRepositoryTest extends AbstractTestcontainers {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28,
+                "password", 28,
                 Gender.MALE);
 
         // when
@@ -69,7 +70,7 @@ class CustomerRepositoryTest extends AbstractTestcontainers {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28,
+                "password", 28,
                 Gender.MALE);
         underTest.save(customer);
 

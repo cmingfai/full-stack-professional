@@ -4,25 +4,49 @@ import cc.oolong.exception.DuplicateResourceException;
 import cc.oolong.exception.RequestValidationException;
 import cc.oolong.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class CustomerService {
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
+    private final CustomerDTOMapper customerDTOMapper;
 
-    public CustomerService(@Qualifier("jdbc") CustomerDao customerDao) {
+    public CustomerService(@Qualifier("jdbc") CustomerDao customerDao,
+                           CustomerDTOMapper customerDTOMapper,
+                           PasswordEncoder passwordEncoder) {
         this.customerDao = customerDao;
+        this.customerDTOMapper = customerDTOMapper;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
-    public List<Customer> getAllCustomers() {
-        return customerDao.selectAllCustomers();
+    public List<CustomerDTO> getAllCustomers() {
+
+        return customerDao.selectAllCustomers().stream().map(
+                customer-> new CustomerDTO(
+                        customer.getId(),
+                        customer.getName(),
+                        customer.getEmail(),
+                        customer.getAge(),
+                        customer.getGender(),
+                        customer.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                                .collect(toList()),
+                        customer.getUsername()
+                )
+        ).collect(toList());
     }
 
-    public Customer getCustomer(Integer id) {
+    public CustomerDTO getCustomer(Integer id) {
         return customerDao
-                .selectCustomerById(id)
+                .selectCustomerById(id).map(customerDTOMapper)
                 .orElseThrow(()->
                         createResourceNotFoundException(id));
     }
@@ -37,7 +61,12 @@ public class CustomerService {
            throw new DuplicateResourceException("email already taken");
         }
         // add
-        Customer customer = new Customer(customerRegistrationRequest.name(), customerRegistrationRequest.email(), customerRegistrationRequest.age(), customerRegistrationRequest.gender());
+        Customer customer = new Customer(
+                customerRegistrationRequest.name(),
+                customerRegistrationRequest.email(),
+                passwordEncoder.encode(customerRegistrationRequest.password()),
+                customerRegistrationRequest.age(),
+                customerRegistrationRequest.gender());
         customerDao.insertCustomer(customer);
 
     }

@@ -1,14 +1,12 @@
 package cc.oolong.customer;
 
 import cc.oolong.TestcontainersTest;
-import org.junit.BeforeClass;
+//import org.junit.BeforeClass;
 import org.junit.jupiter.api.*;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Optional;
 import java.util.UUID;
 import java.util.List;
-import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
@@ -33,7 +31,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         // given
          Customer customer=new Customer(FAKER.name().fullName(),
                  FAKER.internet().safeEmailAddress()+"-"+ UUID.randomUUID(),
-                 28, Gender.MALE);
+                 "password", 28, Gender.MALE);
          underTest.insertCustomer(customer);
 
         // when
@@ -50,7 +48,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28,
+                "password", 28,
                 Gender.MALE);
         underTest.insertCustomer(customer);
 
@@ -94,7 +92,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         for (int i=0; i<numOfCustomersToAdd; i++) {
             Customer customer = new Customer(FAKER.name().fullName(),
                     FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID(),
-                    28,Gender.MALE);
+                    "password", 28,Gender.MALE);
             underTest.insertCustomer(customer);
         }
         // when
@@ -111,7 +109,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28,
+                "password", 28,
                 Gender.MALE);
         underTest.insertCustomer(customer);
 
@@ -141,7 +139,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28,
+                "password", 28,
                 Gender.MALE);
         underTest.insertCustomer(customer);
 
@@ -173,7 +171,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer=new Customer(FAKER.name().fullName(),
                 email,
-                28,
+                "password", 28,
                 Gender.MALE);
         underTest.insertCustomer(customer);
 
@@ -194,7 +192,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String oldName=FAKER.name().fullName();
         Customer customer=new Customer(oldName,
                 email,
-                28,
+                "password", 28,
                 Gender.MALE);
         underTest.insertCustomer(customer);
 
@@ -226,7 +224,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String name=FAKER.name().fullName();
         Customer customer=new Customer(name,
                 oldEmail,
-                28,
+                "password", 28,
                 Gender.MALE);
        underTest.insertCustomer(customer);
 
@@ -257,7 +255,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         int oldAge=28;
         Gender gender=Gender.MALE;
         Customer customer=new Customer(name,
-                email, oldAge, gender);
+                email, "password", oldAge, gender);
         underTest.insertCustomer(customer);
 
         // when
@@ -286,7 +284,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         int age=28;
         Gender oldGender=Gender.MALE;
         Customer customer=new Customer(name,
-                email, age, oldGender);
+                email, "password", age, oldGender);
         underTest.insertCustomer(customer);
 
         // when
@@ -314,7 +312,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String oldName=FAKER.name().fullName();
         int oldAge=28;
         Gender oldGender=Gender.MALE;
-        Customer customer=new Customer(oldName, oldEmail, oldAge, oldGender);
+        Customer customer=new Customer(oldName, oldEmail, "password", oldAge, oldGender);
         underTest.insertCustomer(customer);
 
         // when
@@ -355,7 +353,7 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         String name=FAKER.name().fullName();
         int age=28;
         Gender gender=Gender.MALE;
-        Customer customer=new Customer(name, email, age, gender);
+        Customer customer=new Customer(name, email, "password", age, gender);
         underTest.insertCustomer(customer);
 
         // when
