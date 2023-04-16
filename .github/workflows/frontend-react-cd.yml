@@ -59,7 +59,7 @@ jobs:
           REPO=amigoscode-react \
           TAG=${{ steps.build-number.outputs.BUILD_NUMBER }} \
           ../../.ci/build-publish.sh . \
-          --build-arg api_base_url=${{secrets.EB_ENVIRONMENT_URL}}:8080
+          --build-arg api_base_url=http://${{secrets.EB_ENVIRONMENT_URL}}:8080
 
       - name: Slack message - Dockerrun.aws.json
         run: >
