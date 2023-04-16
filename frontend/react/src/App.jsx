@@ -4,7 +4,7 @@ import CardWithImage from "./components/Card";
 import CreateCustomerDrawer from "./components/CreateCustomerDrawer";
 import {useEffect, useState} from "react";
 import {getCustomers} from "./services/client.js"
-
+import {errorNotification} from "./services/notification";
 
 const App=()=>{
     const [customers, setCustomers]=useState([])
