@@ -3,6 +3,8 @@ import {Button, FormLabel, Input, Select, Alert, AlertIcon, Box, Stack, Text} fr
 import * as Yup from 'yup';
 import {saveCustomer} from "../../services/client"
 import {successNotification, errorNotification} from "../../services/notification";
+import {useAuth} from "../context/AuthContext"
+import {useNavigate} from "react-router-dom"
 
 const MyTextInput = ({ label, ...props }) => {
     // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
@@ -43,7 +45,10 @@ const MySelect = ({ label, ...props }) => {
 };
 
 // And now we can use these
-const CreateCustomerForm = ({onSuccess}) => {
+const RegisterCustomerForm = () => {
+    const {login}=useAuth()
+    const navigate=useNavigate()
+
     return (
         <>
              <Formik
@@ -78,12 +83,21 @@ const CreateCustomerForm = ({onSuccess}) => {
                 })}
                 onSubmit={(customer, { setSubmitting }) => {
                     setSubmitting(true);
+                    // console.log("do registration")
+                    // alert(JSON.stringify(customer,null,0))
                     saveCustomer(customer).then(
                         res=> {
-                            onSuccess(res.headers["authorization"])
-                            console.log(res)
+                             // console.log(res)
                             // alert("customer saved")
-                            successNotification("Customer saved",`${customer.name} was successfully saved`)
+                            successNotification("Registration Success",
+                                `${customer.email} was successfully registered and automatically logined.`)
+
+                            login({username:customer.email,password: customer.password}).then(res=>{
+                                navigate("/dashboard")
+                            }).catch(err=>{
+                                errorNotification(err.code,err?.response.data.message);
+                            });
+
                         }
                     ).catch(err=>{
                         console.log(err)
@@ -136,7 +150,7 @@ const CreateCustomerForm = ({onSuccess}) => {
                              </MySelect>
 
 
-                             <Button isDisabled={!isValid || isSubmitting} type="submit">Submit</Button>
+                             <Button isDisabled={!isValid || isSubmitting} type="submit">Register</Button>
 
 
                          </Stack>
@@ -148,4 +162,4 @@ const CreateCustomerForm = ({onSuccess}) => {
     );
 };
 
-export default CreateCustomerForm;
+export default RegisterCustomerForm;

@@ -27,10 +27,14 @@ public class JWTUtil {
         return issueToken(subject,Map.of());
     }
 
-    public String issueToken(String subject, String ...scopes) {
-        return issueToken(subject,Map.of("scopes",scopes));
+    public String issueToken(String subject, String ...roles) {
+        return issueToken(subject,Map.of("roles",roles));
     }
 
+    public String issueToken(String username, List<String> roles) {
+        return issueToken(username,Map.of("roles",roles));
+    }
+    
     public String issueToken(String subject, Map<String,Object> claims) {
         String token=Jwts.builder()
                 .setClaims(claims)
@@ -72,7 +76,5 @@ public class JWTUtil {
         return getClaims(jwt).getExpiration().before(today);
     }
 
-    public String issueToken(String username, List<String> roles) {
-        return issueToken(username,Map.of("roles",roles));
-    }
+
 }

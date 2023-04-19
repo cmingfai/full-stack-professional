@@ -19,7 +19,7 @@ import { useEffect, useRef} from "react";
 import {useAuth} from "../context/AuthContext"
 import {errorNotification} from "../../services/notification"
 import {useNavigate} from 'react-router-dom'
-
+import RegisterCustomerDrawer from "../RegisterCustomerDrawer"
 
 const MyTextInput = ({ label, ...props }) => {
     // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
@@ -80,7 +80,7 @@ const LoginForm = () => {
 
         {
             ({isValid,isSubmitting, dirty})=>{
-                console.log("isValid="+isValid+", isSubmitting="+isSubmitting)
+                // console.log("isValid="+isValid+", isSubmitting="+isSubmitting)
                 return (
             <Form>
                 <Stack spacing={15}>
@@ -99,6 +99,7 @@ const LoginForm = () => {
                     <Button isDisabled={!isValid|| isSubmitting}  type="submit">
                          Login
                     </Button>
+
                 </Stack>
 
             </Form>
@@ -110,11 +111,12 @@ const LoginForm = () => {
 };
 
 const Login= ()=> {
-    const {customer}=useAuth()
+    const {customer, isCustomerAuthenticated}=useAuth()
     const navigate=useNavigate()
 
     useEffect(()=>{
-        if (customer) {
+
+        if (isCustomerAuthenticated()) {
             navigate("/dashboard")
         }
     },[])
@@ -133,6 +135,8 @@ const Login= ()=> {
                     </Stack>
                     <Heading fontSize={'2xl'} mb={15}>Sign in to your account</Heading>
                      <LoginForm/>
+
+                    <Link color={"blue.500"} href={"/signup"}>Don't have an account? Sign up now.</Link>
                 </Stack>
             </Flex>
             <Flex flex={1} p={10} flexDirection={'column'}

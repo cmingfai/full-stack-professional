@@ -7,7 +7,7 @@ const ProtectedRoute=({children}) => {
     const navigate=useNavigate()
 
     useEffect(()=>{
-        console.log(`isCustomerAuthenticated:${isCustomerAuthenticated()}`)
+        // console.log(`isCustomerAuthenticated:${isCustomerAuthenticated()}`)
         if (!isCustomerAuthenticated()) {
             navigate("/")
         }
