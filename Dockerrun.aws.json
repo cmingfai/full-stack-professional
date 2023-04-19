@@ -15,7 +15,7 @@
     },
     {
       "name": "amigoscode-api",
-      "image": "cmingfai/amigoscode-api:17.04.2023.11.07.10",
+      "image": "cmingfai/amigoscode-api:19.04.2023.16.04.22",
       "essential": true,
       "memory": 512,
       "portMappings": [
