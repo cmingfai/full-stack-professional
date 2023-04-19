@@ -1,8 +1,15 @@
 import axios from "axios";
 
+const getAuthConfig=() => ({
+  headers: {
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`
+  }
+})
+
 const getCustomers=async () => {
   try {
-      return await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/customers`)
+      return await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/customers`,
+          getAuthConfig())
   }   catch(e) {
       throw e
   }
@@ -10,14 +17,17 @@ const getCustomers=async () => {
 
 const saveCustomer=async (customer) => {
     try {
-        return await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/customers`,customer)
+        return await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/customers`,
+            customer,
+            getAuthConfig())
     } catch(e) {
         throw e
     }
 }
 const deleteCustomer=async (id) => {
     try {
-        return await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/v1/customers/${id}`)
+        return await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/v1/customers/${id}`,
+            getAuthConfig())
     } catch(e) {
         throw e
     }
@@ -26,10 +36,21 @@ const deleteCustomer=async (id) => {
 const updateCustomer=async (id, customer) => {
     try {
         return await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/v1/customers/${id}`,
-            customer)
+            customer,
+            getAuthConfig())
     } catch(e) {
         throw e
     }
 }
 
-export {getCustomers, saveCustomer, deleteCustomer, updateCustomer}
+
+const login=async (usernameAndPassword) => {
+    try {
+        return await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/login`
+            ,usernameAndPassword)
+    } catch(e) {
+        throw e
+    }
+}
+
+export {getCustomers, saveCustomer, deleteCustomer, updateCustomer, login}

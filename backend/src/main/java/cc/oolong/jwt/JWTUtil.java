@@ -16,6 +16,7 @@ import java.time.Instant;
 
 import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.SECONDS;
 
 @Service
 public class JWTUtil {
@@ -36,6 +37,7 @@ public class JWTUtil {
                 .setSubject(subject)
                 .setIssuer("https://www.oolong.cc")
                 .setIssuedAt(Date.from(Instant.now()))
+//                .setExpiration(Date.from(Instant.now().plus(30, SECONDS)))
                 .setExpiration(Date.from(Instant.now().plus(15, DAYS)))
                 .signWith(getSigningKey(), HS256)
                 .compact();

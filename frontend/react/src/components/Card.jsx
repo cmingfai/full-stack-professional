@@ -54,7 +54,7 @@ export default function CardWithImage({id, name, email, age, gender, imageNumber
                     />
                 </Flex>
 
-                <Box p={6}>
+                <Box p={1}  mb={0}>
                     <Stack spacing={2} align={'center'} mb={5}>
                         <Tag borderRadius={"full"}>{id}</Tag>
                         <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
@@ -65,8 +65,8 @@ export default function CardWithImage({id, name, email, age, gender, imageNumber
                        </Stack>
                 </Box>
 
-                <Stack p={2} direction={"row"}>
-                    <Stack w={"full"}>
+                <Stack p={2} direction={"row"} spacing={2}>
+                    <Stack w={"full"} mt={0}>
 
                     <EditCustomerDrawer id={id} initialValues={{name, email, age, gender}} fetchCustomers={fetchCustomers}></EditCustomerDrawer>
                     </Stack>

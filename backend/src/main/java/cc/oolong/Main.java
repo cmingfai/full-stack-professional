@@ -23,28 +23,7 @@ public class Main {
         ConfigurableApplicationContext ctx = SpringApplication.run(Main.class, args);
 //        printBeans(ctx);
     }
-//
-//    @Bean
-//    CommandLineRunner runner(CustomerRepository customerRepository) {
-//        return args-> {
-//            Random rand = new Random();
-//             Faker faker = new Faker();
-//            String firstName = faker.name().firstName(); // Emory
-//            String lastName = faker.name().lastName(); // Barton
-//
-//            String fullName = "%s %s".formatted(firstName, lastName);
-//            String email = "%s.%s@gmail.com".formatted(firstName, lastName).toLowerCase();
-//            Random random = new Random();
-//            Integer age = random.nextInt(19, 55);
-//
-//            Gender gender=rand.nextInt() % 2==0? Gender.MALE:Gender.FEMALE;
-//            Customer c = new Customer(fullName, email, UUID.randomUUID().toString(), age, gender);
-//
-//            customerRepository.save(c);
-//
-//
-//        };
-//    }
+
 
     @Bean
     @ConditionalOnProperty(
@@ -65,10 +44,11 @@ public class Main {
             Integer age = random.nextInt(19, 55);
 
             Gender gender=rand.nextInt() % 2==0? Gender.MALE:Gender.FEMALE;
-            Customer c = new Customer(fullName, email, passwordEncoder.encode(UUID.randomUUID().toString()), age, gender);
+            Customer c = new Customer(fullName, email, passwordEncoder.encode("password"), age, gender);
 
             customerRepository.save(c);
 
+            System.out.println(email);
 
         };
     }

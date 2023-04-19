@@ -70,7 +70,7 @@ const App=()=>{
             {customers.map((customer,index)=>{
                 return (
                 <WrapItem key={index}>
-                    <CardWithImage {...customer} imageNumber={index} fetchCustomers={fetchCustomers}></CardWithImage>
+                    <CardWithImage {...customer} imageNumber={customer.id%100} fetchCustomers={fetchCustomers}></CardWithImage>
                 </WrapItem>
                 )
             })}
