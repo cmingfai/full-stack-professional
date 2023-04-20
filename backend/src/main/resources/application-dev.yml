@@ -10,7 +10,7 @@ cors:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/customer
+    url: jdbc:postgresql://awseb-e-aipp78nfp9-stack-awsebrdsdatabase-u8sevpboacsk.ccoxkl90mzlx.ap-east-1.rds.amazonaws.com:5432/ebdb
     username: amigoscode
     password: password
   jpa:

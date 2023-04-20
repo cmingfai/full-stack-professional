@@ -34,7 +34,7 @@ public class JWTUtil {
     public String issueToken(String username, List<String> roles) {
         return issueToken(username,Map.of("roles",roles));
     }
-    
+
     public String issueToken(String subject, Map<String,Object> claims) {
         String token=Jwts.builder()
                 .setClaims(claims)
