@@ -6,7 +6,7 @@ const Home=()=>{
 
     return (
          <SidebarWithHeader>
-                <Text fontSize={"6xl"}>Dashboard</Text>
+                <Text fontSize={"6xl"}>- Dashboard -</Text>
         </SidebarWithHeader>
     )
 }
