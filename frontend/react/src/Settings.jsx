@@ -5,7 +5,7 @@ const Settings=()=>{
     
     return (
          <SidebarWithHeader>
-                <Text fontSize={"6xl"}>Settings</Text>
+                <Text fontSize={"6xl"}>- Settings -</Text>
         </SidebarWithHeader>
     )
 }
