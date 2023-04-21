@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "amigoscode-api",
-      "image": "cmingfai/amigoscode-api:21.04.2023.10.38.05",
+      "image": "cmingfai/amigoscode-api:21.04.2023.16.18.22",
       "essential": true,
       "memory": 512,
       "portMappings": [
