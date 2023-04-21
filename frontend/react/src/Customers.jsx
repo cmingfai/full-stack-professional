@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {getCustomers} from "./services/client.js"
 import {errorNotification} from "./services/notification";
 
-const App=()=>{
+const Customers=()=>{
     const [customers, setCustomers]=useState([])
     const [loading, setLoading]=useState(false)
     const [error, setError]=useState("")
@@ -79,4 +79,4 @@ const App=()=>{
     )
 }
 
-export default App
+export default Customers

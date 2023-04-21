@@ -68,7 +68,7 @@ const LoginForm = () => {
                 // alert(JSON.stringify(values,null,0));
                 login(values).then(res=> {
                     // navigate to dashboard
-                    navigate("/dashboard")
+                    navigate("/dashboard/customers")
                    console.log("successfully logged in")
                 }).catch(err=>{
                      // errorNotification(err.code,err.response.data.message);
@@ -117,7 +117,7 @@ const Login= ()=> {
     useEffect(()=>{
 
         if (isCustomerAuthenticated()) {
-            navigate("/dashboard")
+            navigate("/dashboard/customers")
         }
     },[])
 

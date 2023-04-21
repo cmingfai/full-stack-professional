@@ -49,7 +49,7 @@ public class Main {
             customerRepository.save(c);
 
             System.out.println(email);
-            
+
 
         };
     }
