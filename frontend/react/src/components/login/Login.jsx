@@ -143,7 +143,7 @@ const Login= ()=> {
             alignItems={'center'} justifyContent={'center'}
             bgGradient={{sm:'linear(to-r,blue.600,purple.600)'}}>
                 <Text fontSize={'6xl'} color={'white'} fontWeight={'bold'} mb={5}>
-                    <Link href={"#"}>Enrol Now</Link>
+                    <Link href={"https://amigoscode.com/courses"}>Enrol Now</Link>
                 </Text>
                 <Image
                     alt={'Login Image'}

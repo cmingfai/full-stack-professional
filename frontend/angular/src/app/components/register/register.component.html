@@ -1,0 +1,62 @@
+<div class="flex">
+  <div class="col-6 m-3 flex flex-column justify-content-center">
+    <div class="m-auto">
+      <div class="text-center">
+        <p-avatar
+          image="https://user-images.githubusercontent.com/40702606/210880158-e7d698c2-b19a-4057-b415-09f48a746753.png"
+          styleClass="mr-2" size="xlarge" shape="circle"></p-avatar>
+        <h1>Register for an account</h1>
+
+      </div>
+
+      <div>
+        <p-message *ngIf="errorMsg" severity="error" [text]="errorMsg" styleClass="mb-2"></p-message>
+      </div>
+
+
+
+        <div class="field">
+          <label for="firstname">Name</label>
+          <input [(ngModel)]="customer.name" pInputText id="firstname"  class="w-full" type="text" name="firstname" placeholder="Jane"/>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input [(ngModel)]="customer.email" pInputText id="email"  class="w-full" type="email" name="email" placeholder="Jane@amigoscode.com"/>
+        </div>
+
+        <div class="field">
+          <label for="age">Age</label>
+          <input [(ngModel)]="customer.age" pInputText id="age"  class="w-full" type="number" name="age" placeholder="0"/>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input [(ngModel)]="customer.password" pInputText id="password"  class="w-full" type="password" name="password" placeholder="Type your password"/>
+        </div>
+
+        <div class="field">
+          <label for="gender">Gender</label>
+          <select [(ngModel)]="customer.gender" id="gender" class="p-dropdown w-full custom-select" name="gender">
+            <option value="">Select an option</option>
+            <option value="MALE">MALE</option>
+            <option value="FEMALE">FEMALE</option>
+          </select>
+        </div>
+
+      <button pButton label="Create new account" class="w-full" (click)="signup()"
+      [disabled]="!isCustomerValid"></button>
+      <button pButton label="Aready have an account? Login now."
+              class="p-button-link w-full text-left pl-0"
+              [routerLink]="['/login']">
+
+      </button>
+    </div> </div>
+  <div class="col-6 flex flex-column justify-content-center align-items-center right-container">
+    <h1><a href="https://www.amigoscode.com/courses" target="_blank">Enroll Now</a></h1>
+    <img
+      class="background p-6 pt-0"
+      src="https://user-images.githubusercontent.com/40702606/215539167-d7006790-b880-4929-83fb-c43fa74f429e.png"/>
+  </div>
+
+</div>
