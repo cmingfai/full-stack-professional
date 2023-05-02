@@ -1,5 +1,7 @@
 # Demo full stack project to be built when learning in the PROFESSIONAL Full Stack Developer course attended at amigoscode.com
 
+[Full Stack Professional Course](https://amigoscode.com/courses/enrolled/2026257)
+
 The project to be built will have the following parts:
 - A Rest API using Spring Boot and PostgreSQL Database
 - Unit Testing and Integration Tests using JUnit 5, Mockito, SureFire and FailSafe maven plugins
