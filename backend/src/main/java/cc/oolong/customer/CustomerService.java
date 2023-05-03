@@ -55,6 +55,10 @@ public class CustomerService {
         return new ResourceNotFoundException("Customer with id [%s] not found".formatted(id));
     }
 
+    private static ResourceNotFoundException createEmailNotFoundException(String email) {
+        return new ResourceNotFoundException("Customer with email [%s] not found".formatted(email));
+    }
+
     public void addCustomer(CustomerRegistrationRequest customerRegistrationRequest) {
         // check if email exists
         if (customerDao.existsPersonWithEmail(customerRegistrationRequest.email())) {
@@ -120,5 +124,12 @@ public class CustomerService {
         }
 
         customerDao.updateCustomer(customer);
+    }
+
+    public CustomerDTO getCustomerByEmail(String email) {
+        return customerDao
+                .selectUserByEmail(email).map(customerDTOMapper)
+                .orElseThrow(()->
+                        createEmailNotFoundException(email));
     }
 }

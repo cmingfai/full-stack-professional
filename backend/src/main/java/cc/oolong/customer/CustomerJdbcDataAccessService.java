@@ -22,6 +22,7 @@ public class CustomerJdbcDataAccessService implements  CustomerDao {
         var sql= """
                 SELECT id, name, email, password, age, gender
                 FROM customer
+                LIMIT 50
                 """;
         List<Customer> customers= jdbcTemplate.query(sql, customerRowMapper);
         return customers;
@@ -39,6 +40,8 @@ public class CustomerJdbcDataAccessService implements  CustomerDao {
             return jdbcTemplate.query(sql,customerRowMapper,id).stream().findFirst();
 
     }
+
+
 
     @Override
     public void insertCustomer(Customer customer) {

@@ -27,6 +27,11 @@ public class CustomerController {
        return customerService.getCustomer(customerId);
     }
 
+    @GetMapping("email/{email}")
+    public CustomerDTO getCustomerByEmail(@PathVariable("email") String email) {
+        return customerService.getCustomerByEmail(email);
+    }
+
     @PostMapping
     public ResponseEntity<?> registerCustomer(@RequestBody CustomerRegistrationRequest request) {
         customerService.addCustomer(request);

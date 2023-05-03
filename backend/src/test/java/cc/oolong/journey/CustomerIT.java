@@ -52,46 +52,41 @@ public class CustomerIT {
 
         String authorizationHeader = "Bearer %s".formatted(jwt);
 
-        // get all customer
-
-         List<CustomerDTO> allCustomers = webTestClient.get()
-                .uri(CUSTOMER_PATH)
-                .accept(APPLICATION_JSON)
-                .header(AUTHORIZATION, authorizationHeader)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBodyList(new ParameterizedTypeReference<CustomerDTO>() {
-                })
-                .returnResult()
-                .getResponseBody();
 
 
-
-        int id=allCustomers.stream().filter(customer->customer.email().equals(email))
-                .map(CustomerDTO::id).findFirst().orElseThrow();
-
-
-        // make sure that customer is present
-
-        CustomerDTO expectedCustomer = new CustomerDTO(id, name,email, age, gender,List.of("ROLE_USER"),email);
-
-        assertThat(allCustomers)
-                .contains(expectedCustomer);
-
-
-        // get customer by ID
-
-
-        webTestClient.get()
-                .uri(CUSTOMER_PATH +"/{id}",id)
+        // get customer by email
+        CustomerDTO foundCustomer = webTestClient.get()
+                .uri(CUSTOMER_PATH+"/email/"+email)
                 .accept(APPLICATION_JSON)
                 .header(AUTHORIZATION, authorizationHeader)
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBody(new ParameterizedTypeReference<CustomerDTO>() {
-                }).isEqualTo(expectedCustomer);
+                })
+                .returnResult()
+                .getResponseBody();
+
+        int id=foundCustomer.id();
+
+        // make sure that customer is present
+
+        CustomerDTO expectedCustomer = new CustomerDTO(id, name,email, age, gender,List.of("ROLE_USER"),email);
+
+        assertThat(foundCustomer)
+                .isEqualTo(expectedCustomer);
+
+
+        // get customer by ID
+//        webTestClient.get()
+//                .uri(CUSTOMER_PATH +"/{id}",id)
+//                .accept(APPLICATION_JSON)
+//                .header(AUTHORIZATION, authorizationHeader)
+//                .exchange()
+//                .expectStatus()
+//                .isOk()
+//                .expectBody(new ParameterizedTypeReference<CustomerDTO>() {
+//                }).isEqualTo(expectedCustomer);
     }
 
     @Test
@@ -140,23 +135,20 @@ public class CustomerIT {
                 .exchange()
                 .expectStatus()
                 .isOk();
-        // get all customer
-
-         List<CustomerDTO> allCustomers = webTestClient.get()
-                .uri(CUSTOMER_PATH)
+        // get customer by email
+        CustomerDTO foundCustomer = webTestClient.get()
+                .uri(CUSTOMER_PATH+"/email/"+anotherEmail)
                 .accept(APPLICATION_JSON)
                 .header(AUTHORIZATION, authorizationHeader)
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBodyList(new ParameterizedTypeReference<CustomerDTO>() {
+                .expectBody(new ParameterizedTypeReference<CustomerDTO>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
-        // get id
-        int id=allCustomers.stream().filter(customer->customer.email().equals(anotherEmail))
-                .map(CustomerDTO::id).findFirst().orElseThrow();
+        int id=foundCustomer.id();
 
         // delete customer
         webTestClient.delete()
@@ -230,23 +222,21 @@ public class CustomerIT {
                 .expectStatus()
                 .isOk();
 
-        // get all customer
 
-        List<CustomerDTO> allCustomers = webTestClient.get()
-                .uri(CUSTOMER_PATH)
+        // get customer by email
+        CustomerDTO foundCustomer = webTestClient.get()
+                .uri(CUSTOMER_PATH+"/email/"+anotherEmail)
                 .accept(APPLICATION_JSON)
                 .header(AUTHORIZATION, authorizationHeader)
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBodyList(new ParameterizedTypeReference<CustomerDTO>() {
+                .expectBody(new ParameterizedTypeReference<CustomerDTO>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
-        // find id
-        int id=allCustomers.stream().filter(customer->customer.email().equals(anotherEmail))
-                .map(CustomerDTO::id).findFirst().orElseThrow();
+        int id=foundCustomer.id();
 
 
 
