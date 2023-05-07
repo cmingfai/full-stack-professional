@@ -366,7 +366,7 @@ public class CustomerIT {
         // download image
         byte[] downloadImage = webTestClient.get()
                 .uri(CUSTOMER_PATH + "/{customerId}/profile-image", foundCustomer.id())
-                .accept(APPLICATION_JSON)
+                .accept(MediaType.IMAGE_JPEG)
                 .exchange()
                 .expectStatus()
                 .isOk()

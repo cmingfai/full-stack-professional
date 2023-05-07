@@ -52,4 +52,25 @@ const login=async (usernameAndPassword) => {
     }
 }
 
-export {getCustomers, saveCustomer, deleteCustomer, updateCustomer, login}
+const uploadCustomerProfilePicture=async (id, formData) => {
+    try {
+        return await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/customers/${id}/profile-image`,
+            formData,
+            {
+                ...getAuthConfig(),
+                'Content-Type':'multipart/form-data'
+            })
+    } catch(e) {
+        throw e
+    }
+}
+
+const customerProfilePictureUrl= (id) => `${import.meta.env.VITE_API_BASE_URL}/api/v1/customers/${id}/profile-image`;
+
+export {getCustomers,
+    saveCustomer,
+    deleteCustomer,
+    updateCustomer,
+    login,
+    uploadCustomerProfilePicture,
+    customerProfilePictureUrl}

@@ -71,7 +71,7 @@ const LoginForm = () => {
                     navigate("/dashboard/customers")
                    console.log("successfully logged in")
                 }).catch(err=>{
-                     // errorNotification(err.code,err.response.data.message);
+                     errorNotification(err.code,err.response.data.message);
                      console.log(err)
                 }).finally(()=>{
                     setSubmitting(false)

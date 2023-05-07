@@ -15,6 +15,7 @@ import {
 import {successNotification, errorNotification} from "../services/notification"
 import {DeleteCustomerButton} from "./DeleteCustomerButton"
 import EditCustomerDrawer from "./EditCustomerDrawer"
+import {customerProfilePictureUrl} from "../services/client.js";
 
 const getRandomInt = max=> {
     return Math.floor(Math.random() * max);
@@ -46,7 +47,7 @@ export default function CardWithImage({id, name, email, age, gender, imageNumber
                 <Flex justify={'center'} mt={-12}>
                     <Avatar
                         size={'xl'}
-                        src={`https://randomuser.me/api/portraits/${sex}/${randomInt}.jpg`}
+                        src={customerProfilePictureUrl(id)}
                         alt={'Author'}
                         css={{
                             border: '2px solid white',
