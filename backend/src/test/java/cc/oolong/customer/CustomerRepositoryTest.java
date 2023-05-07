@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -94,5 +95,30 @@ class CustomerRepositoryTest extends AbstractTestcontainers {
 
         // then
         assertThat(actual).isFalse();
+    }
+
+    @Test
+    void canUpdateProfileImageId() {
+        // given
+        String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
+        Customer customer=new Customer(FAKER.name().fullName(),
+                email,
+                "password", 28,
+                Gender.MALE);
+        underTest.save(customer);
+
+        int id=underTest.findAll().stream().filter(c->c.getEmail().equals(email))
+                .map(Customer::getId).findFirst().orElseThrow();
+
+        // when
+
+        underTest.updateProfileImageId("2222",id);
+
+        //then
+        Optional<Customer> updatedCustomer=underTest.findById(id);
+
+        assertThat(updatedCustomer).isPresent().hasValueSatisfying(c-> {
+            assertThat(c.getProfileImageId()).isEqualTo("2222");
+        });
     }
 }

@@ -1,0 +1,9 @@
+aws:
+  s3:
+    mock: false
+
+spring:
+  datasource:
+    url: jdbc:postgresql://awseb-e-7ym853ma3j-stack-awsebrdsdatabase-gunq5dvhkxpm.ccoxkl90mzlx.ap-east-1.rds.amazonaws.com:5432/ebdb
+    username: amigoscode
+    password: password

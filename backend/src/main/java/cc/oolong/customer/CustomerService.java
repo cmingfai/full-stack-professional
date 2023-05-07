@@ -3,13 +3,18 @@ package cc.oolong.customer;
 import cc.oolong.exception.DuplicateResourceException;
 import cc.oolong.exception.RequestValidationException;
 import cc.oolong.exception.ResourceNotFoundException;
+import cc.oolong.s3.S3Buckets;
+import cc.oolong.s3.S3Service;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
@@ -18,30 +23,27 @@ public class CustomerService {
     private final CustomerDao customerDao;
     private final PasswordEncoder passwordEncoder;
     private final CustomerDTOMapper customerDTOMapper;
+    private final S3Buckets s3Buckets;
+    private final S3Service s3Service;
 
     public CustomerService(@Qualifier("jdbc") CustomerDao customerDao,
                            CustomerDTOMapper customerDTOMapper,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           S3Buckets s3Buckets,
+                           S3Service s3Service) {
         this.customerDao = customerDao;
         this.customerDTOMapper = customerDTOMapper;
         this.passwordEncoder = passwordEncoder;
 
+        this.s3Buckets = s3Buckets;
+        this.s3Service = s3Service;
     }
 
     public List<CustomerDTO> getAllCustomers() {
 
-        return customerDao.selectAllCustomers().stream().map(
-                customer-> new CustomerDTO(
-                        customer.getId(),
-                        customer.getName(),
-                        customer.getEmail(),
-                        customer.getAge(),
-                        customer.getGender(),
-                        customer.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                                .collect(toList()),
-                        customer.getUsername()
-                )
-        ).collect(toList());
+        return customerDao.selectAllCustomers()
+                .stream()
+                .map(customerDTOMapper).collect(toList());
     }
 
     public CustomerDTO getCustomer(Integer id) {
@@ -76,9 +78,13 @@ public class CustomerService {
     }
 
     public void deleteCustomer(Integer customerId) {
+        checkIfCustomerExistsOrThrow(customerId);
+        customerDao.deleteCustomerById(customerId);
+    }
+
+    private void checkIfCustomerExistsOrThrow(Integer customerId) {
         boolean existsCustomer=customerDao.existsPersonWithId(customerId);
         if (!existsCustomer) throw createResourceNotFoundException(customerId);
-        customerDao.deleteCustomerById(customerId);
     }
 
     public void updateCustomer(Integer customerId, CustomerUpdateRequest request) {
@@ -131,5 +137,37 @@ public class CustomerService {
                 .selectUserByEmail(email).map(customerDTOMapper)
                 .orElseThrow(()->
                         createEmailNotFoundException(email));
+    }
+
+    public byte[] getCustomerProfileImage(Integer customerId) {
+        CustomerDTO customer=customerDao
+                .selectCustomerById(customerId)
+                .map(customerDTOMapper)
+                .orElseThrow(()->
+                        createResourceNotFoundException(customerId));
+
+        var profileImageId=customer.profileImageId();
+        if (StringUtils.isBlank(profileImageId)) {
+            throw new ResourceNotFoundException(
+                    "Customer with id [%s] profile image not found".formatted(customerId));
+        }
+
+        byte[] profileImage = s3Service.getObject(s3Buckets.getCustomer(),
+                "profile-images/%s/%s".formatted(customerId, profileImageId));
+        return profileImage;
+    }
+
+    public void uploadCustomerProfileImage(Integer customerId, MultipartFile file) {
+        checkIfCustomerExistsOrThrow(customerId);
+        String profileImageId = UUID.randomUUID().toString();
+        try {
+            s3Service.putObject(
+                    s3Buckets.getCustomer(),
+                    "profile-images/%s/%s".formatted(customerId, profileImageId),file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("failed to upload profile image", e);
+        }
+
+        this.customerDao.updateCustomerProfileImageId(profileImageId,customerId);
     }
 }

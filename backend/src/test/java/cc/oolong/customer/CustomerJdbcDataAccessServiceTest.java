@@ -52,8 +52,10 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
                 Gender.MALE);
         underTest.insertCustomer(customer);
 
+
         int id=underTest.selectAllCustomers().stream().filter(c->c.getEmail().equals(email))
                 .map(Customer::getId).findFirst().orElseThrow();
+
 
         // when
         Optional<Customer> actual=underTest.selectCustomerById(id);
@@ -146,6 +148,9 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         // when
         int id=underTest.selectAllCustomers().stream().filter(c->c.getEmail().equals(email))
                 .map(Customer::getId).findFirst().orElseThrow();
+
+
+
         boolean actual=underTest.existsPersonWithId(id);
 
         // then
@@ -357,8 +362,10 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         underTest.insertCustomer(customer);
 
         // when
-        int id=underTest.selectAllCustomers().stream().filter(c->c.getEmail().equals(email))
-                .map(Customer::getId).findFirst().orElseThrow();
+//        int id=underTest.selectAllCustomers().stream().filter(c->c.getEmail().equals(email))
+//                .map(Customer::getId).findFirst().orElseThrow();
+
+        int id=underTest.selectUserByEmail(email).orElseThrow().getId();
 
         customer.setId(id); // only set ID, no other change
         underTest.updateCustomer(customer);
@@ -374,4 +381,26 @@ class CustomerJdbcDataAccessServiceTest extends TestcontainersTest {
         });
     }
 
+
+    @Test
+    void canUpdateProfileImageId() {
+        // given
+        String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
+        Customer customer=new Customer(FAKER.name().fullName(),
+                email,
+                "password", 28,
+                Gender.MALE);
+        underTest.insertCustomer(customer);
+
+        int id=underTest.selectUserByEmail(email).orElseThrow().getId();
+        // when
+        underTest.updateCustomerProfileImageId("2222",id);
+
+        //then
+        Optional<Customer> updatedCustomer=underTest.selectCustomerById(id);
+
+        assertThat(updatedCustomer).isPresent().hasValueSatisfying(c-> {
+            assertThat(c.getProfileImageId()).isEqualTo("2222");
+        });
+    }
 }
